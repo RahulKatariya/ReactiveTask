@@ -1,8 +1,5 @@
 language: objective-c
 xcode_workspace: ReactiveTask.xcworkspace
-branches:
-  only:
-    - master
 matrix:
   include:
     - os: osx
