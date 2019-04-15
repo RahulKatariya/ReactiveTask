@@ -162,10 +162,10 @@ private final class Pipe {
 			channel.setLimit(lowWater: 1)
 			channel.read(offset: 0, length: Int.max, queue: self.queue) { (done, dispatchData, error) in
 				if let dispatchData = dispatchData {
-					// Cast DispatchData to Data.
-					// See https://gist.github.com/mayoff/6e35e263b9ddd04d9b77e5261212be19.
-					let nsdata = dispatchData as Any as! NSData
-					let data = Data(referencing: nsdata)
+					let data = dispatchData.withUnsafeBytes(body: { (bytes: UnsafePointer<Int8>) -> Data in
+						let buffer = UnsafeRawBufferPointer(start: bytes, count: dispatchData.count)
+						return Data(buffer)
+					})
 					observer.send(value: data)
 				}
 
